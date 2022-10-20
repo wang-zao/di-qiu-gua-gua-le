@@ -1,5 +1,9 @@
 <template>
   <div class="hello">
+    <div>playing</div>
+    <div
+      @click="emitRouteChange('main-menu')"
+    >go back</div>
   </div>
 </template>
 
@@ -9,6 +13,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 @Component
 export default class HelloWorld extends Vue {
   @Prop() private msg!: string;
+
+  emitRouteChange(route: string) {
+    this.$emit('routeChange', route);
+  }
 }
 </script>
 

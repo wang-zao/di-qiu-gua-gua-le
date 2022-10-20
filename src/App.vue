@@ -8,13 +8,15 @@
   </div>
 </template>
 <style lang="stylus">
+@import './assets/font.css';
+
 
 body
   padding 0
   margin 0
   
 #app
-  font-family 'Avenir', Helvetica, Arial, sans-serif
+  font-family 'tengxiangjialidayuan', 'Avenir', Helvetica, Arial, sans-serif
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
   text-align center

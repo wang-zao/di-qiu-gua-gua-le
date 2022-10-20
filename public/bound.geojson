@@ -1,0 +1,7 @@
+{
+  "type": "FeatureCollection",
+  "name": "bound_geojson",
+  "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+  "features": [
+  { "type": "Feature", "properties": { "id": 555, "name": "Stanley, Falkland Islands", "lat": -51.69444444, "lon": -57.85277778, "country": "Falkland Islands", "pic_url": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/5\/50\/Aerial_photo_Port_Stanley.jpg", "flag_url": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/8\/83\/Flag_of_the_Falkland_Islands.svg\/1200px-Flag_of_the_Falkland_Islands.svg.png", "city_url": "https:\/\/en.wikipedia.org\/wiki\/Stanley,_Falkland_Islands", "nation_url": "https:\/\/en.wikipedia.org\/wiki\/Falkland_Islands", "description": "Chief port and town of the Falkland Islands", "abs": "Stanley is the capital of the Falkland Islands. It is located on the island of East Falkland, on a north-facing slope in one of the wettest parts of the islands. At the 2016 census, the town had a population of 2,460. The entire population of the Falkland Islands was 3,398 on Census Day on 9 October 2016.", "name_chn": "斯坦利 (福克兰群岛)", "description_chn": "福克兰群岛首府", "abs_chn": "史丹利，又称史丹利港，阿根廷称阿根廷港，是福克兰群岛的首府和唯一城市。史丹利港位于东福克兰岛（阿根廷称索莱达岛）一个北向的山坡上，面向港湾，2012年人口2121。", "level_id": 1 }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -179.999999, -89.999999 ], [ -179.999999, 89.999999 ], [ 179.999999, 89.999999 ], [ 179.999999, -89.999999 ] ] ] } } ]
+}
