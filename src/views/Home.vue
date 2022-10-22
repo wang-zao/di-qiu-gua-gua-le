@@ -1,10 +1,6 @@
 <template>
   <div class="home_wrap">
     <div class="globe_base" id="globeViz"></div>
-    <!-- <main-menu class="tab_item"
-      @btnClicked="() => actionManager().btnClicked()"
-    /> -->
-    
     <global-router
       :currentRoute="currentRoute"
       @handleRouteChange="handleRouteChange"
@@ -18,7 +14,11 @@ import Globe from 'globe.gl';
 import * as THREE from 'three';
 import MainMenu from './Tabs/MainMenu.vue';
 import GlobalRouter from './component/GlobalRouter.vue';
+import {
+  normalMaterial,
+} from '@/utils/material';
 import { EventBus } from '@/utils/eventBus';
+import store from '@/store';
 // import * as d3 from 'd3';
 
 @Component({
@@ -31,7 +31,6 @@ import { EventBus } from '@/utils/eventBus';
 export default class Home extends Vue {
   currentRoute = 'main-menu'
   globe = {
-    scratchRevealedIdList: [] as number[],
     threeJsModel: null,
   }
   data = {
@@ -43,6 +42,7 @@ export default class Home extends Vue {
   mounted() {
     const render = this.renderInit();
     render.renderGlobe();
+    this.actionManager().initWatchers();
   }
 
   renderInit() {
@@ -83,27 +83,17 @@ export default class Home extends Vue {
         world.controls().autoRotateSpeed = 0.35;
       },
       renderScratches: async (world: any) => {
-        // const response = await fetch('./voronoi_mature.geojson')
         await this.dataManager().getVoronoi();
         const voronoi = this.data.voronoi;
         if (voronoi) {
-          const material = new THREE.MeshPhongMaterial({
-            shininess: 5,
-            color: '#666666',
-            // emissive: '#1c1c1c',
-            specular: '#888888',
-            reflectivity: 0.5,
-            flatShading: true,
-            transparent: true,
-            opacity: 1,
-          });
+
           world
-            .polygonsData((voronoi as any).features.filter(this.dataManager().filterByRevealList))
+            .polygonsData((voronoi as any).features)
             .polygonAltitude((d: any) => d.properties.polygonAltitude)
             .polygonCapCurvatureResolution(10)
-            .polygonCapMaterial(material)
+            .polygonCapMaterial(normalMaterial)
             .polygonSideColor(() => '#444444')
-            .polygonsTransitionDuration(2000)
+            .polygonsTransitionDuration(400)
         }
       },
       renderClouds: (world: any) => {
@@ -114,7 +104,7 @@ export default class Home extends Vue {
 
         new THREE.TextureLoader().load(CLOUDS_IMG_URL, (cloudsTexture: any) => {
           const clouds = new THREE.Mesh(
-            new THREE.SphereBufferGeometry(world.getGlobeRadius() * (1 + CLOUDS_ALT), 75, 75),
+            new THREE.SphereGeometry(world.getGlobeRadius() * (1 + CLOUDS_ALT), 75, 75),
             new THREE.MeshPhongMaterial({ map: cloudsTexture, transparent: true })
           );
           world.scene().add(clouds);
@@ -152,63 +142,59 @@ export default class Home extends Vue {
     const that = this;
     return {
       getVoronoi: async () => {
-        const response = await fetch('./voronoi_mature.geojson')
-        that.data.voronoi = await response.json();
+        await store.dispatch('loadDataset');
+        that.data.voronoi = store.state.voronoiData;
         if (that.data.voronoi) {
           that.data.voronoi.features
-            .sort((a: any, b: any) => a.properties.id - b.properties.id)
-            .forEach((d: any) => d.properties.polygonAltitude = 0.02)
+            .forEach((d: any) => d.properties.polygonAltitude = 0.06)
         }
-        console.log('that.data.voronoi.features', that.data.voronoi.features.map((i: any) => i.properties.id))
       },
-      addRevealedScratch: (idx: number)  => {
-        const id = that.data.voronoi.features[idx].properties.id;
-        that.globe.scratchRevealedIdList.push(id);
+      changeRevealedScratchAltitude: (idx: number, value: number)  => {
+        const id = that.data.voronoi.features[idx].properties.polygonAltitude = value
       },
-      changeRevealedScratchAltitude: (idx: number)  => {
-        const id = that.data.voronoi.features[idx].properties.polygonAltitude = -0.1;
-        // that.globe.scratchRevealedIdList.push(id);
-      },
-      filterByRevealList: (d: any) => {
-        // console.log('filterByRevealList', d.properties.id)
-        // console.log('!(this.globe.scratchRevealedIdList as number[]).includes(d.properties.id)', !(this.globe.scratchRevealedIdList as number[]).includes(d.properties.id))
-        return !this.globe.scratchRevealedIdList.includes(d.properties.id);
-      }
     };
   }
 
   actionManager() {
     const that = this;
     return {
-      btnClicked: ()  => {
-        // that.dataManager().addRevealedScratch(that.data.currentCityIdx)
-        that.dataManager().changeRevealedScratchAltitude(that.data.currentCityIdx)
-        that.data.currentCityIdx += 1;
-        console.log('btnClicked!', that.data.currentCityIdx)
+      scratchUpdate: (id: number, altitude: number) => {
+        const idx = that.data.voronoi.features.findIndex((d: any) => d.properties.id === id);
+        that.dataManager().changeRevealedScratchAltitude(idx, altitude);
         const world = that.globe.threeJsModel;
         const voronoi = that.data.voronoi;
-        console.log('world!', world)
-        console.log('voronoi!', voronoi)
-        console.log('voronoi!', (voronoi as any).features.filter(
-              this.dataManager().filterByRevealList
-            ))
-        if (world && voronoi) {
-          // update voronoi data
-          (world as any)
-            .polygonsData((voronoi as any).features.filter(
-              this.dataManager().filterByRevealList
-            ))
-          // fly to next place
-          const nextCity = that.data.voronoi.features[that.data.currentCityIdx]
-          that.animationManager().flyToPosition({
-            delay: 800,
-            lat: nextCity.properties.lat,
-            lng: nextCity.properties.lon,
-            time: 800,
-          })
-        }
-
-      }
+        (world as any).polygonsData((voronoi as any).features)
+      },
+      initWatchers: () => {
+        this.actionManager().watchScratchUp();
+        this.actionManager().watchScratchDown();
+        this.actionManager().watchScratchOff();
+        this.actionManager().watchFlyTo();
+        this.actionManager().watchGlobeRotate();
+      },
+      watchScratchUp: () => {
+        EventBus.$on('scratchUp', (id: number) => that.actionManager().scratchUpdate(id, 0.02));
+      },
+      watchScratchDown: () => {
+        EventBus.$on('scratchDown', (id: number) => that.actionManager().scratchUpdate(id, 0.04));
+      },
+      watchScratchOff: () => {
+        EventBus.$on('scratchOff', (id: number) => that.actionManager().scratchUpdate(id, -0.1));
+      },
+      watchFlyTo: () => {
+        EventBus.$on('flyTo', (city: any) => that.animationManager().flyToPosition({
+          delay: 100,
+          lat: city.lat,
+          lng: city.lon,
+          time: 800,
+        }));
+      },
+      watchGlobeRotate: () => {
+        EventBus.$on('globeRotate', (value: boolean) => {
+          const world = that.globe.threeJsModel;
+          (world as any).controls().autoRotate = value;
+        });
+      },
     };
   }
 

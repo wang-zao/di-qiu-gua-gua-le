@@ -34,6 +34,11 @@ export default class GlobalRouter extends Vue {
 
   handleRouteChange(route: string) {
     this.$emit('handleRouteChange', route);
+    if (route === 'playing') {
+      EventBus.$emit('globeRotate', false);
+    } else {
+      EventBus.$emit('globeRotate', true);
+    }
     EventBus.$emit('playAudio', 'buttonPress');
   }
 }
