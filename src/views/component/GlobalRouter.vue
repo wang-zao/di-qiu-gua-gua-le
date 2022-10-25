@@ -32,6 +32,7 @@ import { EventBus } from '@/utils/eventBus';
 export default class GlobalRouter extends Vue {
   @Prop() private currentRoute!: string;
 
+
   handleRouteChange(route: string) {
     this.$emit('handleRouteChange', route);
     if (route === 'playing') {

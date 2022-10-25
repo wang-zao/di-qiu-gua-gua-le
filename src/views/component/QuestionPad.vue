@@ -1,6 +1,17 @@
 <template>
   <div class="question_pad_wrap">
+    <div class="question_switch"
+      :class="{
+        'options_wrap_displaying': questionPad.displayingCurrent,
+        'question_removing': questionPad.removingCurrent,
+        'question_adding': questionPad.addingCurrent,
+      }"
+      @click="handleSwitchSentence"
+    >
+      切
+    </div>
     <div class="question"
+      id="question_sentence"
       :class="{
         'options_wrap_displaying': questionPad.displayingCurrent,
         'question_removing': questionPad.removingCurrent,
@@ -37,6 +48,7 @@ import Game from '@/utils/game';
 export default class QuestionPad extends Vue {
   @Prop() private game!: Game;
   clickedIdx: number = -1;
+  ramdomAbstractIdx: number = 0;
 
   get questionPad() {
     return this.game.questionPad;
@@ -61,12 +73,19 @@ export default class QuestionPad extends Vue {
 
   get slicedAbstract() {
     try {
+      // get sentences from abstract
       const cityName = this.game.questionPad.questionList[0].name_chn;
       const sentences = this.game.questionPad.questionList[0].abs_chn.split('。');
-      const selectedSentence = sentences[Math.floor(Math.random() * (sentences.length - 1))];
       console.log('sentences', sentences);
-      console.log('selectedSentence', selectedSentence);
+      // get random index of sentences
+      if (this.ramdomAbstractIdx >= sentences.length - 1) {
+        this.getRandomAbstractIdx();
+      }
+      const idx = this.ramdomAbstractIdx;
+      // select a sentence base on the random index
+      const selectedSentence = sentences[idx];
       const otherWords = selectedSentence.split(cityName)
+      // replace the city name with a blank
       if (otherWords.length === 1) {
         return `${'__'.repeat(cityName.length)}这座城市，${selectedSentence}。`;
       } else {
@@ -93,6 +112,29 @@ export default class QuestionPad extends Vue {
     this.clickedIdx = this.options.indexOf(option);
     this.game.selectAnswer(option);
   } 
+
+
+  getRandomAbstractIdx() {
+    this.ramdomAbstractIdx = Math.floor(Math.random() * this.game.questionPad.questionList[0].abs_chn.split('。').length - 1);
+  }
+
+  handleSwitchSentence() {
+    this.addRandomAbstractIdx();
+    this.reInitScroll();
+  }
+
+  reInitScroll() {
+    const questionSentence = document.getElementById('question_sentence');
+    if (questionSentence) {
+      questionSentence.scrollTop = 0;
+    }
+  }
+
+  addRandomAbstractIdx() {
+    this.ramdomAbstractIdx = (this.ramdomAbstractIdx + 1) % (this.game.questionPad.questionList[0].abs_chn.split('。').length - 1);
+  }
+
+
 }
 </script>
 
@@ -127,6 +169,25 @@ $universal-border-radius = 20px;
   align-items center
   padding 20px 20px 10px
   border-radius $universal-border-radius
+  position relative
+  .question_switch
+    position absolute
+    top 10px
+    right 10px
+    width 30px
+    height 30px
+    border-radius $universal-border-radius
+    background #fff
+    color #000
+    border 2px solid #000
+    display flex
+    justify-content center
+    align-items center
+    font-size 0.8rem
+    cursor pointer
+    user-select none
+    z-index 2
+    opacity 0
   .question
     text-align left
     justify-self start
@@ -140,6 +201,15 @@ $universal-border-radius = 20px;
     opacity 0
     width 100%
     box-sizing border-box
+  ::-webkit-scrollbar
+    width 5px
+  ::-webkit-scrollbar-track
+    background transparent
+    border none
+  ::-webkit-scrollbar-thumb
+    background-color darkgrey
+    width 5px
+    color #aaa
   .question_displaying
     opacity 1
   .question_removing

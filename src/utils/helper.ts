@@ -17,3 +17,25 @@ export const getRandomOptionsOfName = (name: string) => {
     name.slice(2) + name[0] + name[1],
   ];
 };
+
+export const formatTime = (time: number) => {
+  const hours = Math.floor(time / 3600);
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  let displayedHours = hours.toString();
+  let displayedMinutes = minutes.toString();
+  let displayedSeconds = seconds.toString();
+  if (hours < 10) {
+    displayedHours = '0' + displayedHours;
+  }
+  if (minutes < 10) {
+    displayedMinutes = '0' + displayedMinutes;
+  }
+  if (seconds < 10) {
+    displayedSeconds = '0' + displayedSeconds;
+  }
+  if (hours === 0) {
+    return `${displayedMinutes}:${displayedSeconds}`;
+  }
+  return `${displayedHours}:${displayedMinutes}:${displayedSeconds}`;
+}

@@ -21,7 +21,9 @@ export default new Vuex.Store({
         .map((feature: any) => feature.properties)
         .sort((a: any, b: any) => a.id - b.id + Math.random() * DATA_SHUFFLE_INDEX)
       state.cityData.forEach((i: any) => {
-          i.options = getRandomOptionsOfName(i.name_chn);
+          i.options = i.name_options.split('。')
+            .sort(() => Math.random() - 0.5)
+          // i.options = getRandomOptionsOfName(i.name_chn);
         });
       console.log('state.cityData', state.cityData);
     }

@@ -14,6 +14,10 @@ class QuestionPad {
   removingCurrent: boolean;
   displayingCurrent: boolean;
   displayingAnswerColor: boolean;
+  displayingWinWindow: boolean;
+  displayingLostWindow: boolean;
+  displayingAddToRankingWindow: boolean;
+  displayingConfetti: boolean;
   allowClicking: boolean;
   config: QuestionPadConfig;
 
@@ -24,6 +28,10 @@ class QuestionPad {
     this.removingCurrent = false;
     this.displayingCurrent = false;
     this.displayingAnswerColor = false;
+    this.displayingWinWindow = true;
+    this.displayingLostWindow = false;
+    this.displayingConfetti = true;
+    this.displayingAddToRankingWindow = false;
     this.allowClicking = false;
   }
 
@@ -64,6 +72,22 @@ class QuestionPad {
       this.displayingAnswerColor = false;
       resolve();
     }, this.config.answerDisplayTime));
+  }
+
+  changeLostWindowDisplay(display: boolean) {
+    this.displayingLostWindow = display;
+  }
+
+  changeWinWindowDisplay(display: boolean) {
+    this.displayingWinWindow = display;
+  }
+
+  changeDisplayAddToRankingWindow(display: boolean) {
+    this.displayingAddToRankingWindow = display;
+  }
+
+  displayLostCities(lostCities: any[]) {
+    // EventBus.$emit('displayLostCities', lostCities);
   }
 }
 

@@ -93,7 +93,7 @@ export default class Home extends Vue {
             .polygonCapCurvatureResolution(10)
             .polygonCapMaterial(normalMaterial)
             .polygonSideColor(() => '#444444')
-            .polygonsTransitionDuration(400)
+            .polygonsTransitionDuration(1000)
         }
       },
       renderClouds: (world: any) => {
