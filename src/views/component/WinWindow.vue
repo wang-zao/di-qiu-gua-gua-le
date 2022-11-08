@@ -1,15 +1,22 @@
 <template>
-  <div class="win_window_wrap">
-    <div class="win_window">
-      <div class="win_window_title">地球，刮出来了!</div>
-      <div class="win_window_time_used">用时：{{ formatTime(game.usedTime) }}</div>
-      <div class="win_window_buttons_wrap">
-        <div class="win_window_button"
-          @click="handleHomeClicked"
-        >主页</div>
-        <div class="win_window_button"
-          @click="showAddToRankingWindow"
-        >加入排行榜</div>
+  <div class="win_window_wrap"
+  >
+    <div class="win_window" >
+      <div 
+        class="win_window_showing_before"
+        :class="{
+          'win_window_showing': game.questionPad.displayingWinWindow,
+        }">
+        <div class="win_window_title">地球，刮出来了!</div>
+        <!-- <div class="win_window_time_used">用时：{{ formatTime(game.usedTime) }}</div> -->
+        <div class="win_window_buttons_wrap">
+          <div class="win_window_button"
+            @click="handleHomeClicked"
+          >主页</div>
+          <div class="win_window_button"
+            @click="showAddToRankingWindow"
+          >加入排行榜</div>
+        </div>
       </div>
     </div>
     <div class="win_window_add_to_ranking_window"
@@ -17,7 +24,6 @@
         'win_window_add_to_ranking_window_show': game.questionPad.displayingAddToRankingWindow,
       }"
     >
-      <div class="win_window_add_to_ranking_window_title">加入排行榜</div>
       <div class="win_window_add_to_ranking_window_used_time">用时：{{ formatTime(game.usedTime) }}</div>
       <div class="win_window_add_to_ranking_window_input_wrap">
         <input
@@ -133,24 +139,32 @@ export default class WinWindow extends Vue {
 
 <style scoped lang="stylus">
 
+@keyframes zoomInWithOffset
+  0%
+    opacity 0
+    transform scale(5)
+  100%
+    opacity 1
+    transform scale(1)
+
 .win_window
   color #000
   position fixed
-  top 60%
+  top 70%
   left 50%
   transform translate(-50%, 0%)
   width 70vw
   height max-content
-  background-color #ffffffaa
   border-radius 10px
   padding 20px
   .win_window_title
     text-align center
+    color #fff
     font-size 30px
-  .win_window_time_used
-    text-align center
-    font-size 20px
-    margin 10px 0
+  // .win_window_time_used
+  //   text-align center
+  //   font-size 20px
+  //   margin 10px 0
   .win_window_buttons_wrap
     display flex
     justify-content space-around
@@ -161,10 +175,16 @@ export default class WinWindow extends Vue {
       line-height 40px
       text-align center
       border-radius 10px
-      background-color #fff
+      background-color #ffffff44
+      color #fff
       cursor pointer
       &:hover
-        background-color #ddd
+        background-color #ffffff22
+.win_window_showing_before
+  opacity 0
+.win_window_showing
+  animation zoomInWithOffset 0.5s forwards
+  animation-delay 1s
 .win_window_add_to_ranking_window
   position fixed
   top 50%
@@ -181,10 +201,6 @@ export default class WinWindow extends Vue {
 
   &.win_window_add_to_ranking_window_show
     display block
-  .win_window_add_to_ranking_window_title
-    text-align center
-    font-size 30px
-    margin-top 20px
   .win_window_add_to_ranking_window_used_time
     text-align center
     font-size 20px
@@ -224,9 +240,9 @@ export default class WinWindow extends Vue {
       height 40px
       line-height 40px
       text-align center
-      border-radius 10px
-      background-color #fff
       cursor pointer
+      background-color #eee
+      border-radius 10px
       &:hover
         background-color #ddd
 .win_window_add_to_ranking_window_mask

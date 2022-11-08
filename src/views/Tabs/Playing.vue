@@ -27,14 +27,20 @@
         :game="game"
       />
     </div>
-    <div
+    <!-- <div
       class="bottom_wrapper"
       @click="emitRouteChange('main-menu')"
-    >go back</div>
+    >go back</div> -->
     <win-window
       :game="game"
       v-if="game.questionPad.displayingWinWindow"
       @routeChange="e => emitRouteChange(e)"
+    />
+    <lost-window
+      :game="game"
+      v-if="game.questionPad.displayingLostWindow"
+      @routeChange="e => emitRouteChange(e)"
+      @restartGame="e => restartGame(e)"
     />
     <confetti v-if="game.questionPad.displayingConfetti"/>
   </div>
@@ -44,6 +50,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import QuestionPad from '../component/QuestionPad.vue';
 import WinWindow from '../component/WinWindow.vue';
+import LostWindow from '../component/LostWindow.vue';
 import Confetti from '../component/Confetti.vue';
 import store from '@/store';
 import { EventBus } from '@/utils/eventBus';
@@ -54,6 +61,7 @@ import { formatTime } from '@/utils/helper';
   components: {
     QuestionPad,
     WinWindow,
+    LostWindow,
     Confetti,
   }
 })
@@ -61,20 +69,48 @@ export default class Playing extends Vue {
   @Prop() private msg!: string;
   game: Game = new Game({
     cityData: store.state.cityData,
-    blood: 10,
-  });
+    // blood: 10, // for build
+    blood: 3, // for dev
+  });;
   formatTime = formatTime;
 
   mounted() {
-    // const game = new Game();
+    console.log('mounted')
+    this.game = new Game({
+      cityData: store.state.cityData,
+      blood: 10, // for build
+      // blood: 3, // for dev
+    });
     this.game.play();
     console.log('game', this.game);
   }
 
-
   emitRouteChange(route: string) {
     this.$emit('routeChange', route);
   }
+
+  async restartGame() {
+    // update voronoi
+    // await this.updateVoronoi();
+    this.game.destroyGame();
+    this.game = new Game({
+      cityData: store.state.cityData,
+      blood: 10, // for build
+      // blood: 3, // for dev
+    });
+    this.game.play();
+  }
+
+  // async updateVoronoi() {
+  //   await store.dispatch('loadDataset');
+  //   EventBus.$emit('updateVoronoi', store.state.voronoiData);
+  // }
+
+  beforeDestroy() {
+    this.game.destroyGame();
+  }
+
+
 }
 </script>
 
@@ -110,8 +146,8 @@ export default class Playing extends Vue {
     top 60%
     left 50%
     transform translateX(-50%)
-  .bottom_wrapper
-    position fixed
-    bottom 20px
-    left 20px
+  // .bottom_wrapper
+  //   position fixed
+  //   bottom 20px
+  //   left 20px
 </style>

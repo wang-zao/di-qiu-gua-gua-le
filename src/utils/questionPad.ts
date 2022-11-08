@@ -19,6 +19,7 @@ class QuestionPad {
   displayingAddToRankingWindow: boolean;
   displayingConfetti: boolean;
   allowClicking: boolean;
+  displayingQuestionPad: boolean;
   config: QuestionPadConfig;
 
   constructor(config: QuestionPadConfig) {
@@ -28,10 +29,11 @@ class QuestionPad {
     this.removingCurrent = false;
     this.displayingCurrent = false;
     this.displayingAnswerColor = false;
-    this.displayingWinWindow = true;
+    this.displayingWinWindow = false;
     this.displayingLostWindow = false;
-    this.displayingConfetti = true;
+    this.displayingConfetti = false;
     this.displayingAddToRankingWindow = false;
+    this.displayingQuestionPad = true;
     this.allowClicking = false;
   }
 
@@ -84,10 +86,6 @@ class QuestionPad {
 
   changeDisplayAddToRankingWindow(display: boolean) {
     this.displayingAddToRankingWindow = display;
-  }
-
-  displayLostCities(lostCities: any[]) {
-    // EventBus.$emit('displayLostCities', lostCities);
   }
 }
 

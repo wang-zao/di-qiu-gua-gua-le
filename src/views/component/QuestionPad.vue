@@ -1,5 +1,9 @@
 <template>
-  <div class="question_pad_wrap">
+  <div class="question_pad_wrap"
+    :class="{
+      'question_pad_wrap_hide': !game.questionPad.displayingQuestionPad,
+    }"
+  >
     <div class="question_switch"
       :class="{
         'options_wrap_displaying': questionPad.displayingCurrent,
@@ -170,6 +174,7 @@ $universal-border-radius = 20px;
   padding 20px 20px 10px
   border-radius $universal-border-radius
   position relative
+  opacity 1
   .question_switch
     position absolute
     top 10px
@@ -247,6 +252,8 @@ $universal-border-radius = 20px;
   .options_wrap_adding
     // time here should be same as addingTime in QuestionPad.ts
     animation fadeIn 0.3s ease-in-out forwards
+.question_pad_wrap_hide
+  animation fadeOut 0.5s ease-in-out forwards
 
 
 

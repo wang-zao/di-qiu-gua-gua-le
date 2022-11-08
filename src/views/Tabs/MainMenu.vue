@@ -61,6 +61,7 @@ export default class MainMenu extends Vue {
 
 // .main_wrapper
 .title_wrapper
+  user-select none
   position fixed
   left 5vh
   // transform translate(-50%, 0)
@@ -80,6 +81,7 @@ export default class MainMenu extends Vue {
     border-radius 50%
 
 .btn_wrapper
+  user-select none
   position fixed
   left 50%
   transform translate(-50%, 0)
@@ -90,7 +92,8 @@ export default class MainMenu extends Vue {
   flex-direction column
   .btn
     padding 10px 20px
-    border-radius 10px
+    border-radius 15px
+    border 2px solid #000
     font-size 1.2rem
     color #000
     // width 100px
@@ -99,6 +102,11 @@ export default class MainMenu extends Vue {
     cursor pointer
     margin 10px
     white-space nowrap
+    &:hover
+      background #eee
+    &:active
+      background #000
+      color #fff
   .btn_rank
     color #fff
     white-space nowrap

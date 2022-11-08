@@ -1,6 +1,7 @@
 <template>
   <div class="home_wrap">
-    <div class="globe_base" id="globeViz"></div>
+    <div class="globe_base" id="globeViz"
+    ></div>
     <global-router
       :currentRoute="currentRoute"
       @handleRouteChange="handleRouteChange"
@@ -19,6 +20,8 @@ import {
 } from '@/utils/material';
 import { EventBus } from '@/utils/eventBus';
 import store from '@/store';
+import { sleeper } from '@/utils/helper';
+import Fly from '@/utils/fireFly';
 // import * as d3 from 'd3';
 
 @Component({
@@ -37,6 +40,7 @@ export default class Home extends Vue {
     voronoi: null as any,
     currentCityIdx: 0,
   }
+  sleeper = sleeper;
 
 
   mounted() {
@@ -64,7 +68,6 @@ export default class Home extends Vue {
             console.log('world.scene()', world.scene())
             // directionalLight.intensity = 1
             that.renderClouds(world);
-            that.renderScratches(world);
             that.renderLight(world.scene());
             this.globe.threeJsModel = world;
           })
@@ -81,12 +84,12 @@ export default class Home extends Vue {
         // Auto-rotate
         world.controls().autoRotate = true;
         world.controls().autoRotateSpeed = 0.35;
+        // get voronoi data
+        this.dataManager().getVoronois();
       },
-      renderScratches: async (world: any) => {
-        await this.dataManager().getVoronoi();
+      renderScratches: (world: any) => {
         const voronoi = this.data.voronoi;
         if (voronoi) {
-
           world
             .polygonsData((voronoi as any).features)
             .polygonAltitude((d: any) => d.properties.polygonAltitude)
@@ -94,7 +97,13 @@ export default class Home extends Vue {
             .polygonCapMaterial(normalMaterial)
             .polygonSideColor(() => '#444444')
             .polygonsTransitionDuration(1000)
+          console.log('loaded completely')
         }
+      },
+      clearScratches: (world: any) => {
+        console.log('clearScratches')
+        world
+          .polygonAltitude(-0.1)
       },
       renderClouds: (world: any) => {
         // Add clouds sphere
@@ -118,7 +127,7 @@ export default class Home extends Vue {
       renderLight: (scene: any) => {
         // adjust ambientLight
         const ambientLight = scene.children.find((obj3d: any) => obj3d.type === 'AmbientLight');
-        ambientLight.intensity = 1
+        ambientLight.intensity = 0.5
         // adjust directionalLight
         const directionalLight = scene.children.find((obj3d: any) => obj3d.type === 'DirectionalLight');
         directionalLight.intensity = 0
@@ -133,7 +142,19 @@ export default class Home extends Vue {
         pointLight2.position.set( -0.5*radius, 0.866*radius, 0 );
         pointLight3.position.set( -0.5*radius, -0.866*radius, 5 );
         scene.add( pointLight1, pointLight2, pointLight3 );
-      }
+
+
+        (function rotateLights() {
+          const speedIdx = 4000;
+          // rotate the point light
+          pointLight1.position.set( radius*Math.cos(Date.now()/speedIdx), 0, radius*Math.sin(Date.now()/speedIdx) );
+          pointLight2.position.set( -radius*Math.cos(Date.now()/(speedIdx*2)), -radius, radius*Math.sin(Date.now()/(speedIdx*2)) );
+          pointLight3.position.set( radius*Math.cos(Date.now()/(speedIdx*2)), radius, radius*Math.sin(Date.now()/(speedIdx*2)) );
+
+
+          requestAnimationFrame(rotateLights);
+        })();
+      },
     };
     return that;
   }
@@ -141,13 +162,33 @@ export default class Home extends Vue {
   dataManager() {
     const that = this;
     return {
-      getVoronoi: async () => {
+      getVoronois: async () => {
         await store.dispatch('loadDataset');
+        console.log('ressss', store.state.cityData)
         that.data.voronoi = store.state.voronoiData;
         if (that.data.voronoi) {
           that.data.voronoi.features
             .forEach((d: any) => d.properties.polygonAltitude = 0.06)
         }
+      },
+      updataVoronoi: (voronoiData: any) => {
+        console.log('updating voronoi', voronoiData)
+        that.data.voronoi = voronoiData;
+        if (that.data.voronoi) {
+          that.data.voronoi.features
+            .forEach((d: any) => d.properties.polygonAltitude = 0.06)
+        }
+        const world = that.globe.threeJsModel;
+        (world as any).polygonsData((voronoiData as any).features)
+      },
+      reInitVoronoiData: () => {
+        const newVoronoi = JSON.parse(JSON.stringify(that.data.voronoi));
+        if (newVoronoi) {
+          newVoronoi.features
+            .forEach((d: any) => d.properties.polygonAltitude = 0.06)
+        }
+        that.data.voronoi = newVoronoi;
+
       },
       changeRevealedScratchAltitude: (idx: number, value: number)  => {
         const id = that.data.voronoi.features[idx].properties.polygonAltitude = value
@@ -171,6 +212,8 @@ export default class Home extends Vue {
         this.actionManager().watchScratchOff();
         this.actionManager().watchFlyTo();
         this.actionManager().watchGlobeRotate();
+        this.actionManager().watchUpdateVoronoi();
+        this.actionManager().watchRenderScratches();
       },
       watchScratchUp: () => {
         EventBus.$on('scratchUp', (id: number) => that.actionManager().scratchUpdate(id, 0.02));
@@ -180,6 +223,25 @@ export default class Home extends Vue {
       },
       watchScratchOff: () => {
         EventBus.$on('scratchOff', (id: number) => that.actionManager().scratchUpdate(id, -0.1));
+      },
+      watchUpdateVoronoi: () => {
+        EventBus.$on('updateVoronoi', (voronoiData: any) => that.dataManager().updataVoronoi(voronoiData));
+      },
+      watchRenderScratches: () => {
+        EventBus.$on('renderScratches', async (payloads: any) => {
+          // 1. clear all scratches
+          const world = that.globe.threeJsModel;
+          that.renderInit().clearScratches(world);
+          // 2. wait 1000ms for the clean
+          await sleeper(1000);
+          // 3. change voronoi data if needed
+
+          // 4. reinit voronoi data
+          that.dataManager().reInitVoronoiData();
+          // 5. render scratches
+          await that.renderInit().renderScratches(world);
+          payloads();
+        });
       },
       watchFlyTo: () => {
         EventBus.$on('flyTo', (city: any) => that.animationManager().flyToPosition({
@@ -240,6 +302,7 @@ export default class Home extends Vue {
     z-index 1
     width 100vw
     height 100vh
+    overflow hidden
   .tab_item
     position absolute
     left 50%

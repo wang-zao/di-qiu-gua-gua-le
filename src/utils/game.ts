@@ -25,7 +25,9 @@ class Game {
       cityData,
       blood,
     } = config;
-    this.cityData = cityData;
+    // slice if cityData is too long for testing
+    this.cityData = cityData.slice(0,5);
+    // this.cityData = cityData;
     this.blood = blood;
     this.finishedPercent = 0;
     this.finishedCount = 0;
@@ -42,11 +44,17 @@ class Game {
   }
 
   play() {
-    // 1. add first question
-    this.currentCity = this.getNextCurrentCityCandidate();
-    this.questionPad.addOneQuestion(this.currentCity);
-    // 2. start timer
-    this.startTimer();
+    // 1. render scratches
+    console.log('game start');
+    EventBus.$emit('renderScratches', () => {
+      // the following code will be executed after scratches are rendered
+      // 2. add first question
+      console.log('loading first question');
+      this.currentCity = this.getNextCurrentCityCandidate();
+      this.questionPad.addOneQuestion(this.currentCity);
+      // 3. start timer
+      this.startTimer();
+    });
   }
 
   startTimer() {
@@ -122,6 +130,8 @@ class Game {
 
   getNextCurrentCityCandidate() {
     const nextCurrentCityCandidate = this.cityData.shift();
+    console.log('getNextCurrentCityCandidate', nextCurrentCityCandidate);
+    console.log('this.cityData.shift()', this.cityData);
     return nextCurrentCityCandidate;
   }
 
@@ -134,25 +144,37 @@ class Game {
   }
 
   gameOver() {
+    console.log('game over');
     // 1.display lost window
     this.questionPad.changeLostWindowDisplay(true);
     // 2.stop timer
     clearInterval(this.timerId);
-    // 3.display lost cities
-    this.questionPad.displayLostCities(this.lostCities);
+    // 3.hide question pad
+    this.questionPad.displayingQuestionPad = false;
   }
 
   gameWin() {
+    // 1.display win window
+    this.questionPad.changeWinWindowDisplay(true);
+    // 2.stop timer
+    clearInterval(this.timerId);
+    // 3.display confetti
     this.questionPad.displayingConfetti = true;
+    // 4.hide question pad
+    this.questionPad.displayingQuestionPad = false;
   }
 
   destroyGame() {
     this.questionPad.displayingConfetti = false;
-    clearInterval(this.timerId);
-    console.log('game destroyed', this.questionPad);
+    // clearInterval(this.timerId);
+    // console.log('game destroyed', this.questionPad);
   }
 
 
 }
 
 export default Game;
+
+
+
+

@@ -39,3 +39,7 @@ export const formatTime = (time: number) => {
   }
   return `${displayedHours}:${displayedMinutes}:${displayedSeconds}`;
 }
+
+export const sleeper = (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
