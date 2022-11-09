@@ -61,8 +61,8 @@ export default class Home extends Vue {
           .globeImageUrl('./globe_terrain.jpeg')
           .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
           .backgroundImageUrl('./grey-sky.png')
-
-          // .backgroundColor('#002E94')
+          .atmosphereColor('#d7f0f6')
+          .atmosphereAltitude(0.25)
           .lineHoverPrecision(0)
           .onGlobeReady(() => {
             console.log('world.scene()', world.scene())
@@ -127,7 +127,7 @@ export default class Home extends Vue {
       renderLight: (scene: any) => {
         // adjust ambientLight
         const ambientLight = scene.children.find((obj3d: any) => obj3d.type === 'AmbientLight');
-        ambientLight.intensity = 0.5
+        ambientLight.intensity = 0.8
         // adjust directionalLight
         const directionalLight = scene.children.find((obj3d: any) => obj3d.type === 'DirectionalLight');
         directionalLight.intensity = 0
@@ -142,18 +142,6 @@ export default class Home extends Vue {
         pointLight2.position.set( -0.5*radius, 0.866*radius, 0 );
         pointLight3.position.set( -0.5*radius, -0.866*radius, 5 );
         scene.add( pointLight1, pointLight2, pointLight3 );
-
-
-        (function rotateLights() {
-          const speedIdx = 4000;
-          // rotate the point light
-          pointLight1.position.set( radius*Math.cos(Date.now()/speedIdx), 0, radius*Math.sin(Date.now()/speedIdx) );
-          pointLight2.position.set( -radius*Math.cos(Date.now()/(speedIdx*2)), -radius, radius*Math.sin(Date.now()/(speedIdx*2)) );
-          pointLight3.position.set( radius*Math.cos(Date.now()/(speedIdx*2)), radius, radius*Math.sin(Date.now()/(speedIdx*2)) );
-
-
-          requestAnimationFrame(rotateLights);
-        })();
       },
     };
     return that;

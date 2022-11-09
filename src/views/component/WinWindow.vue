@@ -79,6 +79,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Game from '@/utils/game';
 import { formatTime } from '@/utils/helper';
+import { EventBus } from '@/utils/eventBus';
 
 @Component
 export default class WinWindow extends Vue {
@@ -93,21 +94,28 @@ export default class WinWindow extends Vue {
 
   showAddToRankingWindow() {
     this.game.questionPad.changeDisplayAddToRankingWindow(true);
+    // play button music
+    EventBus.$emit('playAudio', 'btn');
   }
 
   hideAddToRankingWindow() {
     this.game.questionPad.changeDisplayAddToRankingWindow(false);
+    // play button music
+    EventBus.$emit('playAudio', 'btn');
   }
 
   addToRanking() {
     this.game.questionPad.changeDisplayAddToRankingWindow(false);
-    // this.game.questionPad.changeDisplayWinWindow(false);
-    this.$emit('routeChange', 'main-menu');
+    // play button music
+    EventBus.$emit('playAudio', 'btn');
   }
 
   handleHomeClicked() {
     this.$emit('routeChange', 'main-menu');
     this.game.destroyGame();
+    // play button music
+    EventBus.$emit('playAudio', 'btn');
+
   }
 
   emitRouteChange(route: string) {

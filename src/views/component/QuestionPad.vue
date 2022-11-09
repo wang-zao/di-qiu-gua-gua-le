@@ -47,6 +47,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Game from '@/utils/game';
+import { EventBus } from '@/utils/eventBus';
 
 @Component
 export default class QuestionPad extends Vue {
@@ -125,6 +126,8 @@ export default class QuestionPad extends Vue {
   handleSwitchSentence() {
     this.addRandomAbstractIdx();
     this.reInitScroll();
+    // play button music
+    EventBus.$emit('playAudio', 'btn');
   }
 
   reInitScroll() {
@@ -162,9 +165,12 @@ $universal-border-radius = 20px;
     transform translateX(-20px)
 
 .question_pad_wrap
-  // color #fff
   color #000
-  background #ffffff99
+  // background #ffffff99
+  user-select none
+  background-image radial-gradient(circle,
+    rgba(255,255,255,0.3) 40%,
+    rgba(255,255,255,0.65) 100%)
   height 30vh
   width 70vw
   display flex
@@ -175,6 +181,7 @@ $universal-border-radius = 20px;
   border-radius $universal-border-radius
   position relative
   opacity 1
+  animation fadeIn 0.3s ease-in-out
   .question_switch
     position absolute
     top 10px
@@ -241,9 +248,9 @@ $universal-border-radius = 20px;
       border 2px solid #000
       font-size 1.2rem
     .option_item_wrong
-      background #ff0000
+      background #ff8a8a
     .option_item_correct
-      background #00ff00
+      background #8aff8a
   .options_wrap_displaying
     opacity 1
   .options_wrap_removing

@@ -26,8 +26,8 @@ class Game {
       blood,
     } = config;
     // slice if cityData is too long for testing
-    this.cityData = cityData.slice(0,5);
-    // this.cityData = cityData;
+    // this.cityData = cityData.slice(0,5);
+    this.cityData = cityData;
     this.blood = blood;
     this.finishedPercent = 0;
     this.finishedCount = 0;
@@ -44,6 +44,8 @@ class Game {
   }
 
   play() {
+    // 0. stop globe rotation
+    EventBus.$emit('globeRotate', false);
     // 1. render scratches
     console.log('game start');
     EventBus.$emit('renderScratches', () => {
@@ -54,6 +56,8 @@ class Game {
       this.questionPad.addOneQuestion(this.currentCity);
       // 3. start timer
       this.startTimer();
+      // 4. play music
+      EventBus.$emit('playAudio', 'fly');
     });
   }
 
@@ -88,9 +92,14 @@ class Game {
     // 4. check if win
     if (this.checkIfWin()) {
       this.gameWin();
+      // play music
+      EventBus.$emit('playAudio', 'game_win');
     } else {
       // 5.if not win, add a new question
       this.updateCurrentCity();
+      // play music
+      EventBus.$emit('playAudio', 'select_correct');
+      setTimeout(() => EventBus.$emit('playAudio', 'fly'), 500);
     }
   }
 
@@ -107,11 +116,16 @@ class Game {
     if (this.checkIfLost()) {
       // 6.if game over, game over
       this.gameOver();
+      // play music
+      EventBus.$emit('playAudio', 'game_over');
     } else {
       // 6.if not game over, push current city back to the dataQueue.
       this.cityData.push(this.currentCity);
       // 7.if not game over, add a new question
       this.updateCurrentCity();
+      // play music
+      EventBus.$emit('playAudio', 'select_wrong');
+      setTimeout(() => EventBus.$emit('playAudio', 'fly'), 500);
     }
   }
 
@@ -151,6 +165,8 @@ class Game {
     clearInterval(this.timerId);
     // 3.hide question pad
     this.questionPad.displayingQuestionPad = false;
+    // 4.rotate globe
+    EventBus.$emit('globeRotate', true);
   }
 
   gameWin() {
@@ -162,6 +178,8 @@ class Game {
     this.questionPad.displayingConfetti = true;
     // 4.hide question pad
     this.questionPad.displayingQuestionPad = false;
+    // 5.rotate globe
+    EventBus.$emit('globeRotate', true);
   }
 
   destroyGame() {

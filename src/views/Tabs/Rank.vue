@@ -41,6 +41,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import PopOver from '../component/PopOver.vue';
 import { formatTime } from '@/utils/helper';
+import { EventBus } from '@/utils/eventBus';
 
 @Component({
   components: {
@@ -70,6 +71,8 @@ export default class HelloWorld extends Vue {
 
   emitRouteChange(route: string) {
     this.$emit('routeChange', route);
+    // play button music
+    EventBus.$emit('playAudio', 'btn');
   }
 }
 </script>

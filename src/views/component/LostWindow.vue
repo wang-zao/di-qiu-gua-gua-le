@@ -19,6 +19,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { EventBus } from '@/utils/eventBus';
 
 @Component
 export default class LostWindow extends Vue {
@@ -26,10 +27,14 @@ export default class LostWindow extends Vue {
 
   handleHomeClicked() {
     this.$emit('routeChange', 'main-menu');
+    // play button music
+    EventBus.$emit('playAudio', 'btn');
   }
 
   handleRestartClicked() {
     this.$emit('restartGame');
+    // play button music
+    EventBus.$emit('playAudio', 'btn');
   }
 
 }

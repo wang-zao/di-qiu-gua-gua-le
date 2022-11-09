@@ -12,6 +12,7 @@
       @routeChange="handleRouteChange"
       v-if="currentRoute === 'rank'"
     />
+    <music-player />
   </div>
 </template>
 
@@ -20,6 +21,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import MainMenu from '../Tabs/MainMenu.vue';
 import Playing from '../Tabs/Playing.vue';
 import Rank from '../Tabs/Rank.vue';
+import MusicPlayer from '../component/MusicPlayer.vue';
 import { EventBus } from '@/utils/eventBus';
 
 @Component({
@@ -27,6 +29,7 @@ import { EventBus } from '@/utils/eventBus';
     MainMenu,
     Playing,
     Rank,
+    MusicPlayer,
   }
 })
 export default class GlobalRouter extends Vue {
@@ -40,7 +43,6 @@ export default class GlobalRouter extends Vue {
     } else {
       EventBus.$emit('globeRotate', true);
     }
-    EventBus.$emit('playAudio', 'buttonPress');
   }
 }
 </script>

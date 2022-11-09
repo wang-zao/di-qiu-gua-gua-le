@@ -19,6 +19,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { EventBus } from '@/utils/eventBus';
 
 @Component
 export default class MainMenu extends Vue {
@@ -49,10 +50,14 @@ export default class MainMenu extends Vue {
 
   goToPlaying() {
     this.$emit('routeChange', 'playing');
+    // play button music
+    EventBus.$emit('playAudio', 'btn');
   }
 
   goToRank() {
     this.$emit('routeChange', 'rank');
+    // play button music
+    EventBus.$emit('playAudio', 'btn');
   }
 }
 </script>
