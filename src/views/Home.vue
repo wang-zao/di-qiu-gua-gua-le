@@ -21,7 +21,6 @@ import {
 import { EventBus } from '@/utils/eventBus';
 import store from '@/store';
 import { sleeper } from '@/utils/helper';
-import Fly from '@/utils/fireFly';
 // import * as d3 from 'd3';
 
 @Component({
