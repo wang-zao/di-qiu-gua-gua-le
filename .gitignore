@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
-/dist
+
+# allow dist folder
+# /dist
 
 # local env files
 .env.local
