@@ -81,7 +81,6 @@ export default class QuestionPad extends Vue {
       // get sentences from abstract
       const cityName = this.game.questionPad.questionList[0].name_chn;
       const sentences = this.game.questionPad.questionList[0].abs_chn.split('。');
-      console.log('sentences', sentences);
       // get random index of sentences
       if (this.ramdomAbstractIdx >= sentences.length - 1) {
         this.getRandomAbstractIdx();
@@ -105,15 +104,11 @@ export default class QuestionPad extends Vue {
     return this.game.questionPad.allowClicking;
   }
 
-  mounted() {
-    console.log('game', this.game);
-  }
 
   handleOptionClick(option: string) {
     if (!this.allowClicking) {
       return;
     }
-    console.log('option', option);
     this.clickedIdx = this.options.indexOf(option);
     this.game.selectAnswer(option);
   } 

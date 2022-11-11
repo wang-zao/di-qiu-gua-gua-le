@@ -12,7 +12,6 @@
     <div class="btn_wrapper">
       <div class="btn" @click="goToPlaying">开始刮刮</div>
       <div class="btn_rank" @click="goToRank">排行</div>
-      <!-- <div class="btn" @click="handleClick">switch!</div> -->
     </div>
   </div>
 </template>
@@ -36,11 +35,6 @@ export default class MainMenu extends Vue {
   get titleTextList() {
     return this.title.split('');
   }
-
-  // handleClick() {
-  //   console.log('this.$emit(btnClicked)')
-  //   this.$emit('btnClicked')
-  // }
 
 
   getLetterStyle(key: number) {
@@ -69,10 +63,8 @@ export default class MainMenu extends Vue {
   user-select none
   position fixed
   left 5vh
-  // transform translate(-50%, 0)
   top 5vh
   font-size 1.5rem
-  // letter-spacing 5px
   color #fff
   display flex
   .tittle_letter
@@ -101,8 +93,6 @@ export default class MainMenu extends Vue {
     border 2px solid #000
     font-size 1.2rem
     color #000
-    // width 100px
-    // height 40px
     background #fff
     cursor pointer
     margin 10px

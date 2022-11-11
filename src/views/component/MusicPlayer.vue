@@ -43,9 +43,6 @@ export default class MusicPlayer extends Vue {
   watchAllAudios() {
     EventBus.$on('playAudio', (audioName: string) => {
       const audio = this.$refs[`audio_${audioName}`] as HTMLAudioElement;
-      console.log('get refs here', this.$refs)
-      console.log('get audioName here', audioName)
-      console.log('get audio here', audio)
       audio.currentTime = 0;
       audio.play();
     });

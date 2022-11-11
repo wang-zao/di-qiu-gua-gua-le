@@ -1,23 +1,3 @@
-export const getRandomOptionsOfName = (name: string) => {
-  if (name.length < 2) {
-    return [name, name + '庄', name + '屯', name + '市',];
-  }
-  if (name.length === 2) {
-    return [
-      name[0] + name[1],
-      name[1] + name[0],
-      name[0],
-      name[1],
-    ];
-  }
-  return [
-    name[0] + name[1] + name.slice(2),
-    name[0] + name.slice(2) + name[1],
-    name[1] + name.slice(2) + name[0],
-    name.slice(2) + name[0] + name[1],
-  ];
-};
-
 export const formatTime = (time: number) => {
   const hours = Math.floor(time / 3600);
   const minutes = Math.floor(time / 60);
@@ -42,4 +22,15 @@ export const formatTime = (time: number) => {
 
 export const sleeper = (ms: number) => {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export const getOffsetLookAtLat = (lat: number,offset: number) => {
+  if (offset > 90) {
+    offset = 90;
+  }
+  if (lat > -89.9 + offset) {
+    return lat - offset;
+  } else {
+    return -89.9;
+  }
 }

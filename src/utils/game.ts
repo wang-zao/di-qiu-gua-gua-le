@@ -25,7 +25,7 @@ class Game {
       cityData,
       blood,
     } = config;
-    // slice if cityData is too long for testing
+    // NOTICE: slice only if testing
     // this.cityData = cityData.slice(0,5);
     this.cityData = cityData;
     this.blood = blood;
@@ -47,11 +47,9 @@ class Game {
     // 0. stop globe rotation
     EventBus.$emit('globeRotate', false);
     // 1. render scratches
-    console.log('game start');
     EventBus.$emit('renderScratches', () => {
       // the following code will be executed after scratches are rendered
       // 2. add first question
-      console.log('loading first question');
       this.currentCity = this.getNextCurrentCityCandidate();
       this.questionPad.addOneQuestion(this.currentCity);
       // 3. start timer
@@ -144,8 +142,6 @@ class Game {
 
   getNextCurrentCityCandidate() {
     const nextCurrentCityCandidate = this.cityData.shift();
-    console.log('getNextCurrentCityCandidate', nextCurrentCityCandidate);
-    console.log('this.cityData.shift()', this.cityData);
     return nextCurrentCityCandidate;
   }
 
@@ -158,7 +154,6 @@ class Game {
   }
 
   gameOver() {
-    console.log('game over');
     // 1.display lost window
     this.questionPad.changeLostWindowDisplay(true);
     // 2.stop timer
@@ -184,8 +179,6 @@ class Game {
 
   destroyGame() {
     this.questionPad.displayingConfetti = false;
-    // clearInterval(this.timerId);
-    // console.log('game destroyed', this.questionPad);
   }
 
 

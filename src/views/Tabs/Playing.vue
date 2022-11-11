@@ -78,21 +78,13 @@ import { formatTime } from '@/utils/helper';
 export default class Playing extends Vue {
   @Prop() private msg!: string;
   game: Game = new Game({
-    cityData: store.state.cityData,
-    // blood: 10, // for build
-    blood: 3, // for dev
+    cityData: [],
+    blood: 10, // for build
   });;
   formatTime = formatTime;
 
   mounted() {
-    console.log('mounted')
-    this.game = new Game({
-      cityData: store.state.cityData,
-      blood: 10, // for build
-      // blood: 3, // for dev
-    });
-    this.game.play();
-    console.log('game', this.game);
+    this.restartGame();
   }
 
   emitRouteChange(route: string) {
@@ -100,21 +92,18 @@ export default class Playing extends Vue {
   }
 
   async restartGame() {
-    // update voronoi
-    // await this.updateVoronoi();
     this.game.destroyGame();
-    this.game = new Game({
-      cityData: store.state.cityData,
-      blood: 10, // for build
-      // blood: 3, // for dev
-    });
-    this.game.play();
+    // update voronoi first
+    EventBus.$emit('updateVoroniData', () => {
+      // start the game in the callback
+      this.game = new Game({
+        cityData: store.state.cityData,
+        blood: 10, // for build
+        // blood: 3, // for dev
+      });
+      this.game.play();
+    })
   }
-
-  // async updateVoronoi() {
-  //   await store.dispatch('loadDataset');
-  //   EventBus.$emit('updateVoronoi', store.state.voronoiData);
-  // }
 
   beforeDestroy() {
     this.game.destroyGame();
