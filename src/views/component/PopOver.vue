@@ -5,7 +5,7 @@
         'pop_over_body_smaller': text.length < 10,
       }"
       v-show="showingPopOver"
-    >{{ text }}</div>
+    >{{ popOverText ? popOverText : text }}</div>
     <div class="pop_over_arrow"
       v-show="showingPopOver"
     ></div>
@@ -22,6 +22,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 @Component
 export default class PopOver extends Vue {
   @Prop() private text!: string;
+  @Prop() private popOverText?: string;
   showingPopOver: boolean = false;
 
   showPopOver() {
@@ -50,7 +51,7 @@ export default class PopOver extends Vue {
   width 100%
   height 100%
   .pop_over_body
-    position fixed
+    position absolute
     padding 10px 10px
     transform translate(0, -100%)
     width fit-content

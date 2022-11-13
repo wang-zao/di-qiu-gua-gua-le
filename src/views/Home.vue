@@ -37,6 +37,9 @@ export default class Home extends Vue {
   globe = {
     threeJsModel: null,
     scratchesThickness: 0.2,
+    waterShiness: 20,
+    pointLightIntensity: 0.7,
+    ambientLightIntensity: 0.7,
   }
   data = {
     voronoi: null as any,
@@ -80,7 +83,7 @@ export default class Home extends Vue {
           (texture: any) => {
             globeMaterial.specularMap = texture;
             globeMaterial.specular = new THREE.Color('grey');
-            globeMaterial.shininess = 15;
+            globeMaterial.shininess = this.globe.waterShiness;
         });
         // Auto-rotate
         world.controls().autoRotate = true;
@@ -126,17 +129,17 @@ export default class Home extends Vue {
       renderLight: (scene: any) => {
         // adjust ambientLight
         const ambientLight = scene.children.find((obj3d: any) => obj3d.type === 'AmbientLight');
-        ambientLight.intensity = 0.8
+        ambientLight.intensity = this.globe.ambientLightIntensity;
         // adjust directionalLight
         const directionalLight = scene.children.find((obj3d: any) => obj3d.type === 'DirectionalLight');
-        directionalLight.intensity = 0
-        // directionalLight && directionalLight.position.set(1, 0, -1);
+        directionalLight.intensity = 0;
         // creat a temp ball
         const radius = 500;
         // creat a point light
-        const pointLight1 = new THREE.PointLight( 0xffffff, 1, 1000 );
-        const pointLight2 = new THREE.PointLight( 0xffffff, 1, 1000 );
-        const pointLight3 = new THREE.PointLight( 0xffffff, 1, 1000 );
+        const pointLight1 = new THREE.PointLight( 0xffffff, this.globe.pointLightIntensity, 1000 );
+        const pointLight2 = new THREE.PointLight( 0xffffff, this.globe.pointLightIntensity, 1000 );
+        const pointLight3 = new THREE.PointLight( 0xffffff, this.globe.pointLightIntensity, 1000 );
+
         pointLight1.position.set( radius, 0, 0 );
         pointLight2.position.set( -0.5*radius, 0.866*radius, 0 );
         pointLight3.position.set( -0.5*radius, -0.866*radius, 5 );

@@ -71,11 +71,17 @@ export default class MainMenu extends Vue {
     width 2.3rem
     height 2.3rem
     line-height 2.3rem
-    margin 0 3px
+    margin 0 5px
     display flex
     justify-content center
     align-items center
     border-radius 50%
+    box-shadow 0 0 0 2px #ffffff88
+    transition all 0.3s ease-in-out
+    &:hover
+      background #ffffff !important
+      color #888 !important
+  
 
 .btn_wrapper
   user-select none

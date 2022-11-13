@@ -14,11 +14,16 @@
             v-for="(item, index) in rankList"
             :key="index"
           >
-            <div class="rank_body_list_item_block rank_body_list_item_rank">{{ index + 1 }}</div>
+            <div class="rank_body_list_item_block rank_body_list_item_rank">
+              <div class="rank_body_list_item_rank_cicle">{{ index + 1 }}</div>
+            </div>
             <div class="rank_body_list_item_block rank_body_list_item_used_time">{{ formatTime(item.usedTime) }}</div>
             <div class="rank_body_list_item_block rank_body_list_item_name">
               <pop-over
                 :text="item.name"
+                :popOverText="`${item.name}${
+                  item.date ? ' 刮开于 ' + getYYYYMMDD(item.date) : ''
+                }`"
               />
             </div>
             <div class="rank_body_list_item_block rank_body_list_item_words">
@@ -40,7 +45,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import PopOver from '../component/PopOver.vue';
-import { formatTime } from '@/utils/helper';
+import { formatTime, getYYYYMMDD } from '@/utils/helper';
+import API from '@/api';
 import { EventBus } from '@/utils/eventBus';
 
 @Component({
@@ -51,23 +57,17 @@ import { EventBus } from '@/utils/eventBus';
 export default class HelloWorld extends Vue {
   @Prop() private msg!: string;
   formatTime = formatTime;
-  rankList: any[] = [
-    {
-      name: '明',
-      usedTime: 100,
-      words: '我是小明',
-    },
-    {
-      name: '小红红红红红红红红红红红红红红红红红',
-      usedTime: 100,
-      words: '一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十',
-    },
-    {
-      name: '小刚',
-      usedTime: 100,
-      words: '我是小红，啊啊束带结发速度快放假山卡拉电极法卡萨电极法凯撒登记了看法久啊山卡拉登记上束带结发速度快放假山卡拉电极法卡萨电极',
-    },
-  ]
+  getYYYYMMDD = getYYYYMMDD;
+  rankList: any[] = [];
+
+  mounted() {
+    this.getRankList();
+  }
+
+  async getRankList() {
+    const res = await API.getRankList();
+    this.rankList = res;
+  }
 
   emitRouteChange(route: string) {
     this.$emit('routeChange', route);
@@ -79,14 +79,16 @@ export default class HelloWorld extends Vue {
 
 <style scoped lang="stylus">
 
+$golden-color = #a88300;
+
 .rank_go_back
   position fixed
-  top 10vh
+  top 20px
   left 10vw
-  background transparent
+  background-color #ffffffaa
   border-radius 15px
   padding 10px 20px
-  margin 10px
+  margin 0
   cursor pointer
   user-select none
   &:hover
@@ -121,11 +123,12 @@ export default class HelloWorld extends Vue {
       .rank_body_top_row_rank
         width 10%
       .rank_body_top_row_name
-        width 20%
+        width 30%
       .rank_body_top_row_time
         width 20%
+        color $golden-color
       .rank_body_top_row_words
-        width 50%
+        width 40%
     .rank_body_list_wrap
       height calc(80vh - 150px)
       overflow-y scroll
@@ -149,14 +152,30 @@ export default class HelloWorld extends Vue {
       //   overflow hidden
       .rank_body_list_item_rank
         width 10%
+        .rank_body_list_item_rank_cicle
+          min-width 15px
+          width min-content
+          height 15px
+          border-radius 8px
+          padding 0 2px
+          box-sizing border-box
+          background-color $golden-color
+          color #fff
+          text-align center
+          line-height 15px
+          font-size 10px
+
       .rank_body_list_item_name
-        width 20%
+        width 30%
         text-overflow ellipsis
         white-space nowrap
       .rank_body_list_item_used_time
         width 20%
+        color $golden-color
+        font-weight bold
+        text-shadow 0 0 5px #fff
       .rank_body_list_item_words
-        width 50%
+        width 40%
     
 
 

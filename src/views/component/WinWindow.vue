@@ -71,7 +71,9 @@
         'win_window_add_to_ranking_window_mask_show': game.questionPad.displayingAddToRankingWindow,
       }"
       @click="hideAddToRankingWindow" />
-
+    <notification
+      ref="notification"
+    />
   </div>
 </template>
 
@@ -80,8 +82,14 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import Game from '@/utils/game';
 import { formatTime } from '@/utils/helper';
 import { EventBus } from '@/utils/eventBus';
+import API from '@/api';
+import Notification from './Notification.vue';
 
-@Component
+@Component({
+  components: {
+    Notification,
+  },
+})
 export default class WinWindow extends Vue {
   @Prop() private game!: Game;
   formatTime = formatTime;
@@ -91,8 +99,13 @@ export default class WinWindow extends Vue {
   wordsWarning: string = '';
   showNameWarning: boolean = false;
   showWordsWarning: boolean = false;
+  alreadyAdded: boolean = false;
 
   showAddToRankingWindow() {
+    if (this.alreadyAdded) {
+      (this.$refs.notification as any).showNotification('你已经加入过排行榜了');
+      return;
+    }
     this.game.questionPad.changeDisplayAddToRankingWindow(true);
     // play button music
     EventBus.$emit('playAudio', 'btn');
@@ -104,10 +117,28 @@ export default class WinWindow extends Vue {
     EventBus.$emit('playAudio', 'btn');
   }
 
-  addToRanking() {
-    this.game.questionPad.changeDisplayAddToRankingWindow(false);
+  async addToRanking() {
     // play button music
     EventBus.$emit('playAudio', 'btn');
+    // check input
+    this.handleNameChange();
+    this.handleWordsChange();
+    // check input
+    if (this.showNameWarning || this.showWordsWarning) {
+      return;
+    }
+    // add to ranking
+    await API.addRankItem({
+      name: this.name,
+      words: this.words,
+      usedTime: this.game.usedTime,
+    });
+    // change state
+    this.alreadyAdded = true;
+    // show notification
+    (this.$refs.notification as any).showNotification('加入排行榜成功');
+    // hide window
+    this.game.questionPad.changeDisplayAddToRankingWindow(false);
   }
 
   handleHomeClicked() {

@@ -34,3 +34,26 @@ export const getOffsetLookAtLat = (lat: number,offset: number) => {
     return -89.9;
   }
 }
+
+export const getYYYYMMDD = (localeDateString: string) => {
+  const date = new Date(localeDateString);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}-${month}-${day}`;
+}
+
+export const compareTwoObjectLength = (newData: any, data: any) => {
+
+
+  let l1 = 0;
+  let l2 = 0;
+  for (const key in newData) {
+    l1++;
+  }
+  for (const key in data) {
+    l2++;
+  }
+  return l1 - l2;
+
+}
