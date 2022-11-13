@@ -36,7 +36,7 @@ export default class Home extends Vue {
   currentRoute = 'main-menu'
   globe = {
     threeJsModel: null,
-    scratchesThickness: 0.2,
+    scratchesThickness: 0.04,
     waterShiness: 20,
     pointLightIntensity: 0.7,
     ambientLightIntensity: 0.7,
