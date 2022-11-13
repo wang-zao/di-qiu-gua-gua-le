@@ -1,7 +1,9 @@
 <template>
   <div class="pop_over_wrap">
     <div class="pop_over_body"
+
       :class="{
+        'pop_over_body_fixed': fixedPosition,
         'pop_over_body_smaller': text.length < 10,
       }"
       v-show="showingPopOver"
@@ -21,9 +23,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class PopOver extends Vue {
+  showingPopOver: boolean = false;
   @Prop() private text!: string;
   @Prop() private popOverText?: string;
-  showingPopOver: boolean = false;
+  @Prop() private fixedPosition?: string;
 
   showPopOver() {
     this.showingPopOver = true;
@@ -53,7 +56,7 @@ export default class PopOver extends Vue {
   .pop_over_body
     position absolute
     padding 10px 10px
-    transform translate(0, -100%)
+    transform translate(-30%, -100%)
     width fit-content
     width 144px
     height min-content
@@ -63,6 +66,8 @@ export default class PopOver extends Vue {
     font-size 12px
     white-space pre-wrap
     box-sizing border-box
+  .pop_over_body_fixed
+    position fixed
   .pop_over_body_smaller
     width auto
   .pop_over_arrow

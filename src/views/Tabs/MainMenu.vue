@@ -13,16 +13,32 @@
       <div class="btn" @click="goToPlaying">开始刮刮</div>
       <div class="btn_rank" @click="goToRank">排行</div>
     </div>
+    <div class="btm_icon"  @click="showAboutWindow = true">
+      <icon class="btm_icon_body" iconSrc="./svg/about.svg" size="20"/>
+      <div class="btm_icon_text">关于</div>
+    </div>
+    <about-window
+      v-if="showAboutWindow"
+      @hideAboutWindow="showAboutWindow = false"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { EventBus } from '@/utils/eventBus';
+import Icon from '@/views/component/Icon.vue';
+import AboutWindow from '@/views/component/AboutWindow.vue';
 
-@Component
+@Component({
+  components: {
+    Icon,
+    AboutWindow,
+  }
+})
 export default class MainMenu extends Vue {
   @Prop() private msg!: string;
+  showAboutWindow = false;
   title = '地球刮刮乐';
   letterColorList = [
     '#3b3b3b',
@@ -58,7 +74,6 @@ export default class MainMenu extends Vue {
 
 <style scoped lang="stylus">
 
-// .main_wrapper
 .title_wrapper
   user-select none
   position fixed
@@ -115,5 +130,17 @@ export default class MainMenu extends Vue {
     font-size 1rem
     padding 5px 20px
 
-      
+.btm_icon
+  position fixed
+  bottom 40px
+  right 40px
+  font-size 12px
+  display flex
+  align-items top
+  cursor pointer
+  padding 20px 0 0 20px
+  .btm_icon_text
+    margin 2.5px 0 0 3px
+    color #fff
+
 </style>

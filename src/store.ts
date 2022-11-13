@@ -17,12 +17,12 @@ export default new Vuex.Store({
       state.voronoiData = payload;
       state.cityData = payload.features
         .map((feature: any) => feature.properties)
-        .sort((a: any, b: any) => a.id - b.id + (0.5 - Math.random()) * DATA_SHUFFLE_INDEX)
+        .sort((a: any, b: any) => a.id - b.id + (0.5 - Math.random()) * DATA_SHUFFLE_INDEX);
       state.cityData.forEach((i: any) => {
           i.options = i.name_options.split('。')
-            .sort(() => Math.random() - 0.5)
+            .sort(() => Math.random() - 0.5);
         });
-    }
+    },
   },
   actions: {
     async loadDataset({ commit }) {
@@ -32,7 +32,7 @@ export default new Vuex.Store({
       const dataDeepCloned = JSON.parse(JSON.stringify(data));
       // Store the dataset
       commit('setDataset', dataDeepCloned);
-    }
+    },
 
   },
 });

@@ -1,6 +1,6 @@
 import { EventBus } from './eventBus';
 
-type QuestionPadConfig = {
+interface QuestionPadConfig {
   removingTime: number;
   addingTime: number;
   gapTime: number;

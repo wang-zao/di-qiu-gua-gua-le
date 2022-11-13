@@ -21,6 +21,7 @@
             <div class="rank_body_list_item_block rank_body_list_item_name">
               <pop-over
                 :text="item.name"
+                :fixedPosition="index === 0"
                 :popOverText="`${item.name}${
                   item.date ? ' 刮开于 ' + getYYYYMMDD(item.date) : ''
                 }`"
@@ -28,6 +29,7 @@
             </div>
             <div class="rank_body_list_item_block rank_body_list_item_words">
               <pop-over
+                :fixedPosition="index === 0"
                 :text="item.words"
               />
             </div>
@@ -55,10 +57,10 @@ import { EventBus } from '@/utils/eventBus';
   },
 })
 export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
   formatTime = formatTime;
   getYYYYMMDD = getYYYYMMDD;
-  rankList: any[] = [];
+  @Prop() private msg!: string;
+  private rankList: any[] = [];
 
   mounted() {
     this.getRankList();
@@ -132,6 +134,7 @@ $golden-color = #a88300;
     .rank_body_list_wrap
       height calc(80vh - 150px)
       overflow-y scroll
+      overflow-x hidden
     ::-webkit-scrollbar
       width 5px
     ::-webkit-scrollbar-track
@@ -148,8 +151,6 @@ $golden-color = #a88300;
       align-items center
       height 50px
       text-align left
-      // .rank_body_list_item_block 
-      //   overflow hidden
       .rank_body_list_item_rank
         width 10%
         .rank_body_list_item_rank_cicle

@@ -62,7 +62,6 @@ export default class Home extends Vue {
               powerPreference: "high-performance",
             },
           })
-          // .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
           .globeImageUrl('./globe_terrain.jpeg')
           .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
           .backgroundImageUrl('./grey-sky.png')
@@ -70,7 +69,6 @@ export default class Home extends Vue {
           .atmosphereAltitude(0.25)
           .lineHoverPrecision(0)
           .onGlobeReady(() => {
-            // directionalLight.intensity = 1
             that.renderClouds(world);
             that.renderLight(world.scene());
             this.globe.threeJsModel = world;
@@ -88,8 +86,11 @@ export default class Home extends Vue {
         // Auto-rotate
         world.controls().autoRotate = true;
         world.controls().autoRotateSpeed = 0.35;
-        // get voronoi data
-        // this.dataManager().getVoronois();
+        // allow resize
+        window.addEventListener('resize', () => {
+          world.width(window.innerWidth);
+          world.height(window.innerHeight);
+        });
       },
       renderScratches: (world: any) => {
         const voronoi = this.data.voronoi;

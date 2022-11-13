@@ -10,17 +10,6 @@ export class ConfettiRenderer {
   // Create the overarching container
   container: HTMLDivElement = {} as HTMLDivElement;
 
-  constructor() {
-    this.container = document.createElement('div');
-    this.container.style.position = 'fixed';
-    this.container.style.top      = '0';
-    this.container.style.left     = '0';
-    this.container.style.width    = '100%';
-    this.container.style.height   = '0';
-    this.container.style.overflow = 'visible';
-    this.container.style.zIndex   = '9999';
-  }
-
   colorThemes: any[] = [
     () => {
       return [
@@ -38,6 +27,17 @@ export class ConfettiRenderer {
     },
   ];
 
+  constructor() {
+    this.container = document.createElement('div');
+    this.container.style.position = 'fixed';
+    this.container.style.top      = '0';
+    this.container.style.left     = '0';
+    this.container.style.width    = '100%';
+    this.container.style.height   = '0';
+    this.container.style.overflow = 'visible';
+    this.container.style.zIndex   = '9999';
+  }
+
   render() {
     const that = this;
     if (!this.frame) {
@@ -45,10 +45,10 @@ export class ConfettiRenderer {
       document.body.appendChild(this.container);
 
       // Add confetti
-      var theme = this.colorThemes[0];
+      let theme = this.colorThemes[0];
       (function addConfetto() {
 
-        var confetto = new Confetto(theme);
+        let confetto = new Confetto(theme);
         that.confetti.push(confetto);
         that.container.appendChild(confetto.outer);
         that.timer = setTimeout(addConfetto, that.spread * Math.random());
@@ -56,27 +56,28 @@ export class ConfettiRenderer {
       })();
 
       // Start the loop
-      var prev: any = undefined;
+      let prev: any;
       requestAnimationFrame(function loop(timestamp) {
-        var delta = prev ? timestamp - prev : 0;
+        let delta = prev ? timestamp - prev : 0;
         prev = timestamp;
-        var height = (window as any).innerHeight;
+        let height = (window as any).innerHeight;
 
-        for (var i = that.confetti.length-1; i >= 0; --i) {
+        for (let i = that.confetti.length - 1; i >= 0; --i) {
           if (that.confetti[i].update(height, delta)) {
             that.container.removeChild(that.confetti[i].outer);
             that.confetti.splice(i, 1);
           }
         }
-        if (that.timer || that.confetti.length)
+        if (that.timer || that.confetti.length) {
           return that.frame = requestAnimationFrame(loop);
+        }
         // Cleanup
         document.body.removeChild(that.container);
         that.frame = undefined;
       });
     }
   }
-    
+
   destroy() {
     clearTimeout(this.timer);
     this.timer = undefined;

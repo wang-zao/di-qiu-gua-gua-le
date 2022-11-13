@@ -73,15 +73,15 @@ import { formatTime } from '@/utils/helper';
     WinWindow,
     LostWindow,
     Confetti,
-  }
+  },
 })
 export default class Playing extends Vue {
-  @Prop() private msg!: string;
+
   game: Game = new Game({
     cityData: [],
     blood: 10, // for build
-  });;
-  formatTime = formatTime;
+  });  formatTime = formatTime;
+  @Prop() private msg!: string;
 
   mounted() {
     this.restartGame();
@@ -102,7 +102,7 @@ export default class Playing extends Vue {
         // blood: 3, // for dev
       });
       this.game.play();
-    })
+    });
   }
 
   beforeDestroy() {

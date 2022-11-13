@@ -161,7 +161,6 @@ $universal-border-radius = 20px;
 
 .question_pad_wrap
   color #000
-  // background #ffffff99
   user-select none
   background-image radial-gradient(circle,
     rgba(255,255,255,0.3) 40%,

@@ -43,17 +43,3 @@ export const getYYYYMMDD = (localeDateString: string) => {
   return `${year}-${month}-${day}`;
 }
 
-export const compareTwoObjectLength = (newData: any, data: any) => {
-
-
-  let l1 = 0;
-  let l2 = 0;
-  for (const key in newData) {
-    l1++;
-  }
-  for (const key in data) {
-    l2++;
-  }
-  return l1 - l2;
-
-}

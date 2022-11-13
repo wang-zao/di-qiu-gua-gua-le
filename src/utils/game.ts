@@ -1,7 +1,7 @@
 import QuestionPad from './questionPad';
 import { EventBus } from './eventBus';
 
-type GameConfig = {
+interface GameConfig {
   cityData: any[];
   blood: number;
 }
@@ -17,7 +17,7 @@ class Game {
   questionPad: QuestionPad;
   lostCities: any[];
   timerId: number;
-  
+
 
   constructor(config: GameConfig) {
     this.usedTime = 0;

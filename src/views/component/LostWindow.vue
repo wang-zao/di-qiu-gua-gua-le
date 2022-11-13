@@ -80,9 +80,7 @@ export default class LostWindow extends Vue {
       border-radius 10px
       background-color #ffffff44
       color #fff
-      // font-size 20px
       text-align center
-      // line-height 40px
       cursor pointer
       &:hover
         background-color #ffffff22

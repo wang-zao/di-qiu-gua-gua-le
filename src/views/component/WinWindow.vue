@@ -8,7 +8,6 @@
           'win_window_showing': game.questionPad.displayingWinWindow,
         }">
         <div class="win_window_title">地球，刮出来了!</div>
-        <!-- <div class="win_window_time_used">用时：{{ formatTime(game.usedTime) }}</div> -->
         <div class="win_window_buttons_wrap">
           <div class="win_window_button"
             @click="handleHomeClicked"
@@ -200,10 +199,6 @@ export default class WinWindow extends Vue {
     text-align center
     color #fff
     font-size 30px
-  // .win_window_time_used
-  //   text-align center
-  //   font-size 20px
-  //   margin 10px 0
   .win_window_buttons_wrap
     display flex
     justify-content space-around
