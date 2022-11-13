@@ -18,10 +18,12 @@ yarn install
 ```
 <br />
 
-### 启动项目
+## 启动项目
 ```
 yarn serve
 ```
 <br />
 
-Liscence: 
+## Liscence:
+
+[Creative Commons Zero v1.0 Universal](https://github.com/wang-zao/di-qiu-gua-gua-le/blob/master/LICENSE.md)
